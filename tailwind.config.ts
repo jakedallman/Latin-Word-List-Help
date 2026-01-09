@@ -31,6 +31,10 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -46,6 +50,11 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        latin: {
+          gold: "hsl(var(--latin-gold))",
+          burgundy: "hsl(var(--latin-burgundy))",
+          olive: "hsl(var(--latin-olive))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
