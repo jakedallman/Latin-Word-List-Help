@@ -1,16 +1,17 @@
 import { motion } from "framer-motion";
-import { LatinWord } from "@/data/latinWords";
+import { LatinWord } from "@/types/latinWord";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, BookOpen, CheckCircle } from "lucide-react";
+import { RotateCcw, BookOpen, CheckCircle, FileText } from "lucide-react";
 
 interface SummaryProps {
   unknownWords: LatinWord[];
   totalWords: number;
   onRestart: () => void;
   onStudyUnknown: () => void;
+  onNewWords?: () => void;
 }
 
-const Summary = ({ unknownWords, totalWords, onRestart, onStudyUnknown }: SummaryProps) => {
+const Summary = ({ unknownWords, totalWords, onRestart, onStudyUnknown, onNewWords }: SummaryProps) => {
   const knownCount = totalWords - unknownWords.length;
   const percentage = Math.round((knownCount / totalWords) * 100);
 
@@ -54,6 +55,12 @@ const Summary = ({ unknownWords, totalWords, onRestart, onStudyUnknown }: Summar
         </div>
 
         <div className="flex gap-4 justify-center flex-wrap">
+          {onNewWords && (
+            <Button onClick={onNewWords} variant="outline" size="lg" className="gap-2">
+              <FileText className="w-4 h-4" />
+              New Words
+            </Button>
+          )}
           <Button onClick={onRestart} variant="outline" size="lg" className="gap-2">
             <RotateCcw className="w-4 h-4" />
             Start Over

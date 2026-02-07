@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { LatinWord } from "@/data/latinWords";
+import { LatinWord } from "@/types/latinWord";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 
