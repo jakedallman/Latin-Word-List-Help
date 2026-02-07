@@ -1,26 +1,26 @@
 import { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
-import { latinWords, LatinWord } from "@/data/latinWords";
+import { LatinWord } from "@/types/latinWord";
 import Flashcard from "@/components/Flashcard";
 import ProgressBar from "@/components/ProgressBar";
 import Summary from "@/components/Summary";
-import StartScreen from "@/components/StartScreen";
+import WordInput from "@/components/WordInput";
 
-type StudyState = "start" | "studying" | "complete";
+type StudyState = "input" | "studying" | "complete";
 
 const Index = () => {
-  const [studyState, setStudyState] = useState<StudyState>("start");
+  const [studyState, setStudyState] = useState<StudyState>("input");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [unknownWords, setUnknownWords] = useState<LatinWord[]>([]);
-  const [studyingWords, setStudyingWords] = useState<LatinWord[]>(latinWords);
+  const [studyingWords, setStudyingWords] = useState<LatinWord[]>([]);
+  const [allWords, setAllWords] = useState<LatinWord[]>([]);
 
-  const totalSections = Math.max(...latinWords.map(w => w.section));
-
-  const handleStart = useCallback(() => {
-    setStudyState("studying");
+  const handleWordsReady = useCallback((words: LatinWord[]) => {
+    setAllWords(words);
+    setStudyingWords(words);
     setCurrentIndex(0);
     setUnknownWords([]);
-    setStudyingWords(latinWords);
+    setStudyState("studying");
   }, []);
 
   const handleKnow = useCallback(() => {
@@ -41,11 +41,11 @@ const Index = () => {
   }, [currentIndex, studyingWords]);
 
   const handleRestart = useCallback(() => {
-    setStudyState("start");
+    setStudyingWords(allWords);
     setCurrentIndex(0);
     setUnknownWords([]);
-    setStudyingWords(latinWords);
-  }, []);
+    setStudyState("studying");
+  }, [allWords]);
 
   const handleStudyUnknown = useCallback(() => {
     setStudyingWords(unknownWords);
@@ -54,26 +54,24 @@ const Index = () => {
     setStudyState("studying");
   }, [unknownWords]);
 
+  const handleNewWords = useCallback(() => {
+    setStudyState("input");
+    setAllWords([]);
+    setStudyingWords([]);
+    setCurrentIndex(0);
+    setUnknownWords([]);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="container max-w-4xl mx-auto">
-        {/* Header */}
         {studyState === "studying" && (
-          <ProgressBar 
-            current={currentIndex} 
-            total={studyingWords.length} 
-          />
+          <ProgressBar current={currentIndex} total={studyingWords.length} />
         )}
 
-        {/* Main Content */}
         <AnimatePresence mode="wait">
-          {studyState === "start" && (
-            <StartScreen
-              key="start"
-              totalWords={latinWords.length}
-              totalSections={totalSections}
-              onStart={handleStart}
-            />
+          {studyState === "input" && (
+            <WordInput key="input" onWordsReady={handleWordsReady} />
           )}
 
           {studyState === "studying" && studyingWords[currentIndex] && (
@@ -94,6 +92,7 @@ const Index = () => {
               totalWords={studyingWords.length}
               onRestart={handleRestart}
               onStudyUnknown={handleStudyUnknown}
+              onNewWords={handleNewWords}
             />
           )}
         </AnimatePresence>
